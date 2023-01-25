@@ -463,5 +463,6 @@ export default {
       this.drawer = false;
     },
   },
+  emits: ['update:group'],
 };
 </script>
