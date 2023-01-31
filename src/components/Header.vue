@@ -442,6 +442,17 @@ export default {
   },
 
   methods: {
+    async getItems() {
+      const response = await fetch('/api/items', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      return data;
+    },
+
     toggleDrawer() {
       // v-navigation-drawer v-model="drawer"
       this.drawer = !this.drawer;

@@ -1,5 +1,5 @@
 <template>
-  <S2W />
+  <S2W :items="items" />
 </template>
 
 <script>
@@ -10,6 +10,13 @@ import S2W from '../components/S2W.vue';
 
 export default defineComponent({
   name: 'SpinToWin',
+
+  props: {
+    items: {
+      type: Array,
+      default: () => [],
+    },
+  },
 
   components: {
     S2W,

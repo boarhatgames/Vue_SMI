@@ -31,7 +31,20 @@
     </v-alert>
     <v-tabs v-model="cat_tab" color="#0099cc" align-tabs="left">
       <v-tab :value="1">Properties</v-tab>
-      <v-tab :value="2">Prizes (0)</v-tab>
+      <v-tab :value="2"
+        >Prizes ({{ selectedCat.prizes.length }})<v-spacer
+          ><v-btn
+            v-if="cat_tab != 2"
+            disabled
+            icon="mdi-plus"
+            size="x-small"
+          ></v-btn>
+          <v-btn
+            v-if="cat_tab == 2"
+            icon="mdi-plus"
+            size="x-small"
+          ></v-btn> </v-spacer
+      ></v-tab>
     </v-tabs>
     <!-- Show a form of active (checkmark), Name (text), Count(Number) cant go past 99 Weighting (number), Background (number) -->
     <v-form v-if="cat_tab == 1">
@@ -81,6 +94,7 @@
         />
       </v-container>
     </v-form>
+    <Prizes v-if="cat_tab == 2" :prize="prize" :items="items" />
   </v-card>
   <br />
   <v-alert
@@ -94,6 +108,8 @@
 </template>
 
 <script>
+import Prizes from './Prizes.vue';
+
 export default {
   name: 'Details',
   props: {
@@ -101,6 +117,13 @@ export default {
       type: null,
       required: true,
     },
+    items: {
+      type: Array,
+      required: true,
+    },
+  },
+  components: {
+    Prizes,
   },
   data() {
     return {
@@ -118,6 +141,7 @@ export default {
         this.selectedCat != null ? this.selectedCat.weighting : null,
       catBackground:
         this.selectedCat != null ? this.selectedCat.background : null,
+      prize: this.selectedCat != null ? this.selectedCat.prizes : [],
     };
   },
   methods: {
@@ -178,7 +202,7 @@ export default {
       this.catCount = this.selectedCat.count;
       this.catWeighting = this.selectedCat.weighting;
       this.catBackground = this.selectedCat.background;
-
+      this.prize = this.selectedCat.prizes;
       // this.modified(this.active);
     }
   },

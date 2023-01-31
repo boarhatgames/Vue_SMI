@@ -83,7 +83,7 @@
         </p>
       </v-col>
       <v-col cols="7">
-        <Details :selectedCat="getCat(selectedCat)" />
+        <Details :selectedCat="getCat(selectedCat)" :items="items" />
       </v-col>
 
       <!-- Category Info + Prizes -->
@@ -142,6 +142,12 @@ export default {
     snackBar,
     WheelTiming,
   },
+  props: {
+    items: {
+      type: Array,
+    },
+  },
+
   data() {
     return {
       tab: 1,
@@ -150,7 +156,6 @@ export default {
       duration: null,
       durationData: null,
       icon: '',
-
       snackbar: {
         visible: false,
         text: '',
@@ -296,6 +301,7 @@ export default {
       }
     });
     this.changeTab();
+    console.log(this.items);
   },
 };
 </script>
