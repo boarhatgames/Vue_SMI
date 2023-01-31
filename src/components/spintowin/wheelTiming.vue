@@ -53,6 +53,16 @@ export default {
       duration: null,
     };
   },
+  methods: {
+    async getTiming() {
+      const response = await fetch('/api/s2w/timing');
+      const data = await response.json();
+      this.duration = data.duration;
+    },
+  },
+  mounted() {
+    this.getTiming();
+  },
   emits: ['saveTiming'],
 };
 </script>

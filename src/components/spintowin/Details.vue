@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="selectedCat != null">
-    <v-card-title>{{ selectedCat.name }}</v-card-title>
+    <v-card-title>{{ catName }}</v-card-title>
     <v-card-subtitle>{{ selectedCat.id }}</v-card-subtitle>
     <v-alert :type="alertType" variant="tonal">
       {{ alertText }}
@@ -19,12 +19,13 @@
       </v-btn>
       <v-btn
         v-if="save"
+        @click="saveChanges"
         style="margin-right: 5px !important"
         icon
         size="small"
         class="float-right p-5"
         ><v-tooltip activator="parent" location="bottom" open-delay="700"
-          >Slice is currently active.</v-tooltip
+          >Save changes</v-tooltip
         >
         <v-icon color="success">mdi-check</v-icon>
       </v-btn>
@@ -66,6 +67,7 @@
           hide-details="auto"
           :model-value="selectedCat.name"
           v-model="catName"
+          @change="modified(selectedCat.name)"
         />
         <br />
         <v-text-field
@@ -78,12 +80,14 @@
             (v) => v <= 99 || 'Count must be less than 99',
           ]"
           v-model="catCount"
+          @change="modified(selectedCat.count)"
         />
         <v-text-field
           label="Weighting"
           type="number"
           :model-value="selectedCat.weighting"
           v-model="catWeighting"
+          @change="modified(selectedCat.weighting)"
         />
         <!-- TODO convert this into a dropdown -->
         <v-text-field
@@ -91,6 +95,7 @@
           type="number"
           :model-value="selectedCat.background"
           v-model="catBackground"
+          @change="modified(selectedCat.background)"
         />
       </v-container>
     </v-form>
@@ -136,6 +141,7 @@ export default {
       active: this.selectedCat != null ? this.selectedCat.active : null,
       activeSwitch: this.selectedCat != null ? this.selectedCat.active : null,
       catName: this.selectedCat != null ? this.selectedCat.name : null,
+      name: this.selectedCat != null ? this.selectedCat.name : null,
       catCount: this.selectedCat != null ? this.selectedCat.count : null,
       catWeighting:
         this.selectedCat != null ? this.selectedCat.weighting : null,
@@ -148,34 +154,105 @@ export default {
     cancelChanges() {
       this.activeSwitch = this.selectedCat.active;
       this.active = this.selectedCat.active;
+      this.catName = this.selectedCat.name;
+      this.name = this.selectedCat.name;
+      this.catCount = this.selectedCat.count;
+      this.catWeighting = this.selectedCat.weighting;
+      this.catBackground = this.selectedCat.background;
       this.cancel = false;
       this.save = false;
       this.alertType = 'success';
       this.alertText = 'Unmodified';
+    },
+    saveChanges() {
+      this.selectedCat.active = this.activeSwitch;
+      this.selectedCat.name = this.catName;
+      this.selectedCat.count = this.catCount;
+      this.selectedCat.weighting = this.catWeighting;
+      this.selectedCat.background = this.catBackground;
+      this.cancel = false;
+      this.save = false;
+      this.alertType = 'success';
+      this.alertText = 'Saved';
+
+      // TODO save to database
     },
     modified(model) {
       // TODO figure out how to make this cleaner
       switch (model) {
         case this.selectedCat.active:
           // set active to the opposite of what it is
+          // check other cases to see if they are modified
           this.active = !this.active;
-          console.log(this.active);
-          if (this.selectedCat.active != this.active) {
-            this.alertType = 'warning';
-            this.alertText = 'Modified';
-            this.cancel = true;
-            this.save = true;
+          if (
+            this.selectedCat.active != this.active ||
+            this.selectedCat.name != this.catName ||
+            this.selectedCat.count != this.catCount ||
+            this.selectedCat.weighting != this.catWeighting ||
+            this.selectedCat.background != this.catBackground
+          ) {
+            this.modify();
           } else {
-            this.alertType = 'success';
-            this.alertText = 'Unmodified';
-            this.cancel = false;
-            this.save = false;
+            this.unmodified();
           }
           break;
-        case 1:
-          // this.active = true;
+        case this.selectedCat.name:
+          this.name = !this.catName;
+          if (
+            this.selectedCat.name != this.catName ||
+            this.selectedCat.count != this.catCount ||
+            this.selectedCat.weighting != this.catWeighting ||
+            this.selectedCat.background != this.catBackground ||
+            this.selectedCat.active != this.active
+          ) {
+            this.modify();
+          } else {
+            this.unmodified();
+          }
           break;
+        case this.selectedCat.count:
+          if (
+            this.selectedCat.count != this.catCount ||
+            this.selectedCat.weighting != this.catWeighting ||
+            this.selectedCat.background != this.catBackground ||
+            this.selectedCat.active != this.active ||
+            this.selectedCat.name != this.catName
+          ) {
+            this.modify();
+          } else {
+            this.unmodified();
+          }
+          break;
+        case this.selectedCat.weighting:
+          if (
+            this.selectedCat.weighting != this.catWeighting ||
+            this.selectedCat.background != this.catBackground ||
+            this.selectedCat.active != this.active ||
+            this.selectedCat.name != this.catName ||
+            this.selectedCat.count != this.catCount ||
+            this.selectedCat.active != this.active
+          ) {
+            this.modify();
+          } else {
+            this.unmodified();
+          }
+          break;
+        case this.selectedCat.background:
+          if (
+            this.selectedCat.background != this.catBackground ||
+            this.selectedCat.active != this.active ||
+            this.selectedCat.name != this.catName ||
+            this.selectedCat.count != this.catCount ||
+            this.selectedCat.weighting != this.catWeighting
+          ) {
+            this.modify();
+          } else {
+            this.unmodified();
+          }
+          break;
+
         default:
+
         // this.active = null;
       }
 
@@ -183,9 +260,19 @@ export default {
       //   this.alertType = 'success';
       //   this.alertText = 'Unmodified';
       // }
-      console.log(this.model);
-
       // add a v-btn save and cancel buttons to the #alert
+    },
+    modify() {
+      this.alertType = 'warning';
+      this.alertText = 'Modified';
+      this.cancel = true;
+      this.save = true;
+    },
+    unmodified() {
+      this.alertType = 'success';
+      this.alertText = 'Unmodified';
+      this.cancel = false;
+      this.save = false;
     },
   },
   updated() {
@@ -199,11 +286,12 @@ export default {
       this.active = this.selectedCat.active;
       this.activeSwitch = this.selectedCat.active;
       this.catName = this.selectedCat.name;
+      this.name = this.selectedCat.name;
       this.catCount = this.selectedCat.count;
       this.catWeighting = this.selectedCat.weighting;
       this.catBackground = this.selectedCat.background;
       this.prize = this.selectedCat.prizes;
-      // this.modified(this.active);
+      // this.modify(this.active);
     }
   },
 

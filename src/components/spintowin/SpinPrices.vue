@@ -21,7 +21,6 @@
             hint="Number of Spins"
             v-model="spins1"
             ref="spins1"
-            persistent-hint
           />
           <v-text-field
             label="Cost"
@@ -32,7 +31,6 @@
             hint="Cost in Gold"
             v-model="gold1"
             ref="gold1"
-            persistent-hint
           />
         </v-col>
         <v-col cols="4">
@@ -46,7 +44,6 @@
             hint="Number of Spins"
             v-model="spins2"
             ref="spins2"
-            persistent-hint
           />
           <v-text-field
             label="Cost"
@@ -57,7 +54,6 @@
             hint="Cost in Gold"
             v-model="gold2"
             ref="gold2"
-            persistent-hint
           />
         </v-col>
 
@@ -74,7 +70,6 @@
             hint="Number of Spins"
             v-model="spins3"
             ref="spins3"
-            persistent-hint
           />
           <v-text-field
             label="Cost"
@@ -85,7 +80,6 @@
             hint="Cost in Gold"
             v-model="gold3"
             ref="gold3"
-            persistent-hint
           />
         </v-col>
       </v-row>
