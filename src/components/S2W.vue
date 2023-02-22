@@ -92,11 +92,7 @@
     <v-row>
       <v-col cols="12">
         <v-expansion-panels v-model="panels">
-          <WheelTiming
-            @saveTiming="saveTiming"
-            :duration="duration"
-            ref="duration"
-          />
+          <WheelTiming @saveTiming="saveTiming" ref="duration" />
           <SpinPrices />
         </v-expansion-panels>
       </v-col>
@@ -237,7 +233,7 @@ export default {
       return this.currCategory.find((cat) => cat.id == id);
     },
 
-    saveTiming(data) {
+    async saveTiming(data) {
       // TODO save timing to database via api
       // Error Handling
       if (data == null) {
@@ -261,10 +257,17 @@ export default {
         timeout: 2000,
         icon: 'mdi-check-circle',
       });
-    },
-    getTiming() {
-      // TODO get timing from database via api
-      this.duration = 30;
+
+      // Save to database
+      await fetch('/api/s2w/timing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // postData = timing=> {timing: data}
+
+        body: JSON.stringify({ timing: data }),
+      });
     },
 
     triggerSnackbar(data) {
@@ -301,7 +304,7 @@ export default {
       }
     });
     this.changeTab();
-    console.log(this.items);
+    this.duration = await this.getTiming();
   },
 };
 </script>

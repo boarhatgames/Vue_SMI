@@ -17,7 +17,7 @@
             outlined
             dense
             type="number"
-            placeholder="1"
+            :placeholder="spins1"
             hint="Number of Spins"
             v-model="spins1"
             ref="spins1"
@@ -27,7 +27,7 @@
             outlined
             dense
             type="number"
-            placeholder="75"
+            :placeholder="gold1"
             hint="Cost in Gold"
             v-model="gold1"
             ref="gold1"
@@ -40,7 +40,7 @@
             outlined
             dense
             type="number"
-            placeholder="180"
+            :placeholder="spins2"
             hint="Number of Spins"
             v-model="spins2"
             ref="spins2"
@@ -50,7 +50,7 @@
             outlined
             dense
             type="number"
-            placeholder="180"
+            :placeholder="gold2"
             hint="Cost in Gold"
             v-model="gold2"
             ref="gold2"
@@ -66,7 +66,7 @@
             outlined
             dense
             type="number"
-            placeholder="180"
+            :placeholder="spins3"
             hint="Number of Spins"
             v-model="spins3"
             ref="spins3"
@@ -76,7 +76,7 @@
             outlined
             dense
             type="number"
-            placeholder="180"
+            :placeholder="gold3"
             hint="Cost in Gold"
             v-model="gold3"
             ref="gold3"
@@ -99,16 +99,7 @@
 <script>
 export default {
   name: 'SpinPrices',
-  data() {
-    return {
-      spins1: null,
-      gold1: null,
-      spins2: null,
-      gold2: null,
-      spins3: null,
-      gold3: null,
-    };
-  },
+
   methods: {
     async getSpinPrices() {
       // Get Spin Prices

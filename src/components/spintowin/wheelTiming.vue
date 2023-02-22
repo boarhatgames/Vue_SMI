@@ -16,7 +16,7 @@
             outlined
             dense
             type="number"
-            placeholder="180"
+            :placeholder="duration"
             hint="Duration in Seconds"
             v-model="duration"
             ref="duration"
@@ -48,21 +48,19 @@
 <script>
 export default {
   name: 'WheelTiming',
-  data() {
-    return {
-      duration: null,
-    };
-  },
+
   methods: {
     async getTiming() {
       const response = await fetch('/api/s2w/timing');
       const data = await response.json();
-      this.duration = data.duration;
+      return (this.duration = data.duration);
     },
   },
+
   mounted() {
     this.getTiming();
   },
+
   emits: ['saveTiming'],
 };
 </script>
